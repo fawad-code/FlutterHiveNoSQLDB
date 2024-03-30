@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         //Editing Name means updating
                         trailing: IconButton(
                             onPressed: () {
-                              snapshot.data!.put('name', 'Fawad');
+                              snapshot.data!.put('name', 'Fawad Ibrar');
                               //call set state to get changes
                               setState(() {
                               });
@@ -53,30 +53,26 @@ class _HomeScreenState extends State<HomeScreen> {
               //Provide Reference of created box (BoxOne is name of box we gave)
               future: Hive.openBox('BoxTwo'),
               builder: (context, snapshot) {
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: ListTile(
-                          tileColor: Colors.blueGrey,
-                          shape: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          title: Text(
-                            snapshot.data!.get('name').toString(),
-                          ),
-                          subtitle: Text(
-                            snapshot.data!.get('age').toString(),
-                          ),
-                        trailing: IconButton(
-                            onPressed: () {
-                              snapshot.data!.delete('name');
-                              snapshot.data!.put('age', '20');
-                              //call set state to get changes
-                              setState(() {
-                              });
-                            }, icon: const Icon(Icons.delete)),),
-                    ),
-                  ],
+                return Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: ListTile(
+                      tileColor: Colors.blueGrey,
+                      shape: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      title: Text(
+                        snapshot.data!.get('name').toString(),
+                      ),
+                      subtitle: Text(
+                        snapshot.data!.get('age').toString(),
+                      ),
+                    trailing: IconButton(
+                        onPressed: () {
+                          snapshot.data!.delete('name');
+                          snapshot.data!.put('age', '20');
+                          //call set state to get changes
+                          setState(() {
+                          });
+                        }, icon: const Icon(Icons.delete)),),
                 );
               }),
         ],
