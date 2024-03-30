@@ -2,6 +2,8 @@
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 
+part 'notes.g.dart';
+
 //Type Id is Model Class ID for another class we have to use typeId: new
 @HiveType(typeId: 0)
 class NotesModel {
