@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:practice_1/WIDGETS/widgets.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -9,6 +10,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  //TEXT FORM FIELD CONTROLLERS
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,9 +46,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             onPressed: () {
                               snapshot.data!.put('name', 'Fawad Ibrar');
                               //call set state to get changes
-                              setState(() {
-                              });
-                            }, icon: const Icon(Icons.edit)),
+                              setState(() {});
+                            },
+                            icon: const Icon(Icons.edit)),
                       ),
                     ),
                   ],
@@ -56,44 +61,49 @@ class _HomeScreenState extends State<HomeScreen> {
                 return Padding(
                   padding: const EdgeInsets.all(16),
                   child: ListTile(
-                      tileColor: Colors.blueGrey,
-                      shape: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      title: Text(
-                        snapshot.data!.get('name').toString(),
-                      ),
-                      subtitle: Text(
-                        snapshot.data!.get('age').toString(),
-                      ),
+                    tileColor: Colors.blueGrey,
+                    shape: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    title: Text(
+                      snapshot.data!.get('name').toString(),
+                    ),
+                    subtitle: Text(
+                      snapshot.data!.get('age').toString(),
+                    ),
                     trailing: IconButton(
                         onPressed: () {
                           snapshot.data!.delete('name');
                           snapshot.data!.put('age', '20');
                           //call set state to get changes
-                          setState(() {
-                          });
-                        }, icon: const Icon(Icons.delete)),),
+                          setState(() {});
+                        },
+                        icon: const Icon(Icons.delete)),
+                  ),
                 );
               }),
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          //create Box(files)
-          var box = await Hive.openBox('BoxOne');
-          //create 2nd Box
-          var box2 = await Hive.openBox('BoxTwo');
-          //putting data in above boxes
-          box.put('name', 'Fawad');
-          box2.put('name', 'HiveDB SQL');
+          showMyDialog(context, titleController, descriptionController);
 
-          //Storing multiple Data
-          box.put('details', {
-            'Profession': 'Software Eng',
-            'Batch': '2019',
-          });
-          //ForPrinting box
-          print(box.get('details'));
+          //This Code is only for Basics of Hive and Boxes
+          // //create Box(files)
+          // var box = await Hive.openBox('BoxOne');
+          // //create 2nd Box
+          // var box2 = await Hive.openBox('BoxTwo');
+          // //putting data in above boxes
+          // box.put('name', 'Fawad');
+          // box2.put('name', 'HiveDB SQL');
+          //
+          // //Storing multiple Data
+          // box.put('details', {
+          //   'Profession': 'Software Eng',
+          //   'Batch': '2019',
+          // });
+          // //ForPrinting box
+          // print(box.get('details'));
+
         },
         child: const Icon(Icons.add),
       ),

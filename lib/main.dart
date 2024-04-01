@@ -17,7 +17,7 @@ void main() async {
   //Register Generated Adapter class
   Hive.registerAdapter(NotesModelAdapter());
 
-  //Open Box
+  //Open Box //notes is box name
   await Hive.openBox<NotesModel>('notes');
 
 
