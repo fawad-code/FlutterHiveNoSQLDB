@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:practice_1/BOXES_hiveDB/boxes.dart';
+import 'package:practice_1/MODEL/notes.dart';
 import 'package:practice_1/WIDGETS/widgets.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,67 +23,66 @@ class _HomeScreenState extends State<HomeScreen> {
         title: const Text('Hive Database'),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          FutureBuilder(
-              //Provide Reference of created box (BoxOne is name of box we gave)
-              future: Hive.openBox('BoxOne'),
-              builder: (context, snapshot) {
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: ListTile(
-                        tileColor: Colors.orangeAccent,
-                        shape: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        title: Text(
-                          snapshot.data!.get('name').toString(),
-                        ),
-                        subtitle: Text(
-                          snapshot.data!.get('age').toString(),
-                        ),
-                        //Editing Name means updating
-                        trailing: IconButton(
-                            onPressed: () {
-                              snapshot.data!.put('name', 'Fawad Ibrar');
-                              //call set state to get changes
-                              setState(() {});
+      body: ValueListenableBuilder<Box<NotesModel>>(
+        valueListenable: Boxes.getData().listenable(),
+        builder: (context, box, _) {
+          var data = box.values.toList().cast<NotesModel>();
+          return ListView.builder(
+            itemCount: data.length,
+            itemBuilder: (context, index) {
+              return Card(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            data[index].title.toString(),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 18),
+                          ),
+                          const Spacer(),
+                          InkWell(
+                            child: Icon(
+                              Icons.edit,
+                              color: Colors.black,
+                            ),
+                            onTap: () {
+                              editNotes(
+                                  context,
+                                  titleController,
+                                  descriptionController,
+                                  data[index],
+                                  data[index].title.toString(),
+                                  data[index].description.toString());
                             },
-                            icon: const Icon(Icons.edit)),
+                          ),
+                          InkWell(
+                            child: Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            ),
+                            onTap: () {
+                              delete(data[index]);
+                            },
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                );
-              }),
-          FutureBuilder(
-              //Provide Reference of created box (BoxOne is name of box we gave)
-              future: Hive.openBox('BoxTwo'),
-              builder: (context, snapshot) {
-                return Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: ListTile(
-                    tileColor: Colors.blueGrey,
-                    shape: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    title: Text(
-                      snapshot.data!.get('name').toString(),
-                    ),
-                    subtitle: Text(
-                      snapshot.data!.get('age').toString(),
-                    ),
-                    trailing: IconButton(
-                        onPressed: () {
-                          snapshot.data!.delete('name');
-                          snapshot.data!.put('age', '20');
-                          //call set state to get changes
-                          setState(() {});
-                        },
-                        icon: const Icon(Icons.delete)),
+                      Text(
+                        data[index].description.toString(),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w300, fontSize: 15),
+                      )
+                    ],
                   ),
-                );
-              }),
-        ],
+                ),
+              );
+            },
+          );
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -103,7 +104,6 @@ class _HomeScreenState extends State<HomeScreen> {
           // });
           // //ForPrinting box
           // print(box.get('details'));
-
         },
         child: const Icon(Icons.add),
       ),
